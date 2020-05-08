@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:id="@+id/ntptitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sense_ms"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:layout_below="@id/ntptitle1"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:id="@+id/ntp_interval"
+        style="@android:style/Widget.Material.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/lowest_int"
+        android:inputType="number"
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
+
+
+    <TextView
+        android:layout_below="@id/ntp_interval"
+        android:id="@+id/stitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/max_imgs_limit"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:layout_below="@id/stitle1"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:id="@+id/random_stat"
+        style="@android:style/Widget.Material.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_the_max_integer"
+        android:inputType="number"
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
+
+    <Switch
+        android:layout_below="@id/random_stat"
+        android:layout_marginTop="5dp"
+        android:id="@+id/random_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:switchPadding="10dp"
+        android:text="@string/random_acg_status" />
+
+    <Switch
+        android:layout_below="@id/random_enable"
+        android:layout_marginTop="5dp"
+        android:id="@+id/dialog_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:switchPadding="10dp"
+        android:text="@string/detail_dialog" />
+
+    <Switch
+        android:layout_below="@id/dialog_enable"
+        android:layout_marginTop="5dp"
+        android:id="@+id/ping_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:switchPadding="10dp"
+        android:text="@string/exec_ping" />
+
+    <Button
+        android:id="@+id/setap"
+        style="@android:style/Widget.Material.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ping_enable"
+        android:layout_marginTop="2dp"
+        android:text="@string/apply" />
+
+</RelativeLayout>

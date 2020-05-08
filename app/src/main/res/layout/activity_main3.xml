@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:monkey="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#237EAD"
+    tools:context=".NTP_Changer">
+
+    <org.starx_software_lab.ntp_server_changer.MiClockView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        monkey:backgroundColor="#237EAD"
+        monkey:darkColor="#80ffffff"
+        monkey:lightColor="#ffffff"
+        monkey:textSize="14sp" />
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:id="@+id/tx1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:text="@string/t5"
+        android:textColor="@color/green"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_marginStart="5dp"
+        android:id="@+id/miclock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tx1"
+        android:fontFamily="monospace"
+        android:text="@string/empy"
+        android:textColor="@color/green"
+        android:textStyle="bold" />
+</RelativeLayout>
