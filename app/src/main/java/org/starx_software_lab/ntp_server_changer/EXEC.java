@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 
-public class exec_su extends AsyncTask<Void, Void, Boolean> {
+public class EXEC extends AsyncTask<Void, Void, Boolean> {
     //init_vars
     @SuppressLint("StaticFieldLeak")
     private View view = null;

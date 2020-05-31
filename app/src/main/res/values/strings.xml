@@ -13,7 +13,7 @@
     <string name="t4">错误的更改将导致您的NTP服务无法正常工作。</string>
     <string name="t5">本机时间:</string>
     <string name="e1">NTP服务器地址</string>
-    <string name="c1">使用推荐的NTP服务器 - NTP1.ALIYUN.COM</string>
+    <string name="c1">使用推荐的NTP服务器 - TIME.APPLE.COM</string>
     <string name="b1">立即修改</string>
     <string name="b2">综合测试</string>
     <string name="date">NULL</string>

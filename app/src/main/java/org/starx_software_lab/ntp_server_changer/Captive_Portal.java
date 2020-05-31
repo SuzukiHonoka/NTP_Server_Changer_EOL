@@ -171,7 +171,7 @@ public class Captive_Portal extends AppCompatActivity {
             } else {
                 mode = "0";
             }
-            exec_su set_cp = new exec_su();
+            EXEC set_cp = new EXEC();
             set_cp.addc(set_cp_mode + mode, MSG_FROM_CP_CHANGE_CONFIRM);
             set_cp.cvh(getWindow().getDecorView(), update_ui);
             set_cp.execute();
@@ -183,7 +183,7 @@ public class Captive_Portal extends AppCompatActivity {
             } else {
                 mode = "0";
             }
-            exec_su set_https = new exec_su();
+            EXEC set_https = new EXEC();
             set_https.addc(set_https_mode + mode, MSG_FROM_HTTPS_CHANGE_CONFIRM);
             set_https.cvh(getWindow().getDecorView(), update_ui);
             set_https.execute();
@@ -198,14 +198,14 @@ public class Captive_Portal extends AppCompatActivity {
             https_add = miui_https_server;
         }
         if (https_add.length() > 0) {
-            exec_su set_https = new exec_su();
+            EXEC set_https = new EXEC();
             set_https.addc(set_https_depens + https_add, MSG_FROM_HTTPS_ADD_CHANGE_CONFIRM);
             set_https.cvh(getWindow().getDecorView(), update_ui);
             set_https.execute();
         }
         //Giving you the second chance
         if (http_add.length() > 0) {
-            exec_su set_http = new exec_su();
+            EXEC set_http = new EXEC();
             set_http.addc(set_http_depens + http_add, MSG_FROM_HTTP_ADD_CHANGE_CONFIRM);
             set_http.cvh(getWindow().getDecorView(), update_ui);
             set_http.execute();
@@ -245,20 +245,20 @@ public class Captive_Portal extends AppCompatActivity {
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.toString() + "\n强制重启WiFi...", Toast.LENGTH_SHORT).show();
-            exec_su set_wifi_d = new exec_su();
+            EXEC set_wifi_d = new EXEC();
             set_wifi_d.cvh(dec, update_ui);
             set_wifi_d.addc("svc wifi disable", MSG_FROM_WIFI_CONFIRM);
             set_wifi_d.execute();
-            exec_su set_wifi_o = new exec_su();
+            EXEC set_wifi_o = new EXEC();
             set_wifi_o.cvh(dec, update_ui);
             set_wifi_o.addc("svc wifi enable", MSG_FROM_WIFI_CONFIRM);
             set_wifi_o.execute();
         }
-        exec_su set_data_d = new exec_su();
+        EXEC set_data_d = new EXEC();
         set_data_d.cvh(dec, update_ui);
         set_data_d.addc("svc data disable", MSG_FROM_DATA_NETWORK_CONFIRM);
         set_data_d.execute();
-        exec_su set_data_o = new exec_su();
+        EXEC set_data_o = new EXEC();
         set_data_o.cvh(dec, update_ui);
         set_data_o.addc("svc data enable", MSG_FROM_DATA_NETWORK_CONFIRM);
         set_data_o.execute();
@@ -272,28 +272,28 @@ public class Captive_Portal extends AppCompatActivity {
     }
 
     public void cp_check() {
-        exec_su cp_check = new exec_su();
+        EXEC cp_check = new EXEC();
         cp_check.addc(check_cp_mode, MSG_FROM_CP_STATUS);
         cp_check.cvh(getWindow().getDecorView(), update_ui);
         cp_check.execute();
     }
 
     public void https_check() {
-        exec_su https_check = new exec_su();
+        EXEC https_check = new EXEC();
         https_check.addc(check_https_mode, MSG_FROM_HTTPS_STATUS);
         https_check.cvh(getWindow().getDecorView(), update_ui);
         https_check.execute();
     }
 
     public void https_204_check() {
-        exec_su https_204_check = new exec_su();
+        EXEC https_204_check = new EXEC();
         https_204_check.addc(check_https_depens, MSG_FROM_HTTPS_204_ADDRESS);
         https_204_check.cvh(getWindow().getDecorView(), update_ui);
         https_204_check.execute();
     }
 
     public void http_204_check() {
-        exec_su http_204_check = new exec_su();
+        EXEC http_204_check = new EXEC();
         http_204_check.addc(check_http_depens, MSG_FROM_HTTP_204_ADDRESS);
         http_204_check.cvh(getWindow().getDecorView(), update_ui);
         http_204_check.execute();

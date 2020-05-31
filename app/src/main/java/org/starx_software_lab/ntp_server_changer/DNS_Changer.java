@@ -48,7 +48,7 @@ public class DNS_Changer extends AppCompatActivity {
                                 .setMessage("看起来，你的规则中已存在关于53端口NAT的规则了，以下是规则的内容，请确认。\n" + rules)
                                 .setNeutralButton("删除第一行规则(TCP/UDP 需要删除两次)", (dialog, which) -> {
                                     exec(set_main_dns_remove,0,null);
-//                                    exec_su rm_rules = new exec_su();
+//                                    EXEC rm_rules = new EXEC();
 //                                    rm_rules.addc(set_main_dns_remove, 0);
 //                                    rm_rules.cvh(getWindow().getDecorView(), handler);
 //                                    rm_rules.execute();
@@ -56,7 +56,7 @@ public class DNS_Changer extends AppCompatActivity {
                                 .setPositiveButton("来肝!", (dialog, which) -> {
                                     exec(set_main_dns_dnat + formal_rules,0,null);
                                     exec(set_main_dns_dnat_u + formal_rules,0,null);
-//                                    exec_su set_rules = new exec_su();
+//                                    EXEC set_rules = new EXEC();
 //                                    set_rules.addc(set_main_dns_dnat + formal_rules, 0);
 //                                    set_rules.cvh(getWindow().getDecorView(), handler);
 //                                    set_rules.execute();
@@ -67,7 +67,7 @@ public class DNS_Changer extends AppCompatActivity {
                     } else {
                         exec(set_main_dns_dnat + formal_rules,0,null);
                         exec(set_main_dns_dnat_u + formal_rules,0,null);
-//                        exec_su set_rules = new exec_su();
+//                        EXEC set_rules = new EXEC();
 //                        set_rules.addc(set_main_dns_dnat + formal_rules, 0);
 //                        Log.d(TAG, set_main_dns_dnat + formal_rules);
 //                        set_rules.cvh(getWindow().getDecorView(), handler);
@@ -90,7 +90,7 @@ public class DNS_Changer extends AppCompatActivity {
 
     public void exec(String string,int mode,Handler.Callback handler) {
         int d_mode = 0;
-        exec_su exec1 = new exec_su();
+        EXEC exec1 = new EXEC();
         if (mode > 0) {
             d_mode = mode;
         }
@@ -116,13 +116,13 @@ public class DNS_Changer extends AppCompatActivity {
     public void get_defaults_dns_address() {
         exec(get_dns1, MSG_FROM_RETURN_DNS1,handler);
         //dns1
-//        exec_su getdns1 = new exec_su();
+//        EXEC getdns1 = new EXEC();
 //        getdns1.addc(get_dns1, MSG_FROM_RETURN_DNS1);
 //        getdns1.cvh(getWindow().getDecorView(), handler);
 //        getdns1.execute();
         exec(get_dns2, MSG_FROM_RETURN_DNS2,handler);
         //dns2
-//        exec_su getdns2 = new exec_su();
+//        EXEC getdns2 = new EXEC();
 //        getdns2.addc(get_dns2, MSG_FROM_RETURN_DNS2);
 //        getdns2.cvh(getWindow().getDecorView(), handler);
 //        getdns2.execute();
@@ -135,7 +135,7 @@ public class DNS_Changer extends AppCompatActivity {
         }
         //check if the rules already exist
         exec(set_main_dns_check, MSG_FORM_RETURN_RULES_CHECK,handler);
-//        exec_su check_rules = new exec_su();
+//        EXEC check_rules = new EXEC();
 //        check_rules.addc(set_main_dns_check, MSG_FORM_RETURN_RULES_CHECK);
 //        check_rules.cvh(getWindow().getDecorView(), handler);
 //        check_rules.execute();
@@ -144,13 +144,13 @@ public class DNS_Changer extends AppCompatActivity {
         if (change_way == 2) {
             exec(set_dns1 + dns1.getText().toString().trim(), 0,null);
             //dns1
-//            exec_su setdns1 = new exec_su();
+//            EXEC setdns1 = new EXEC();
 //            setdns1.addc(set_dns1 + dns1.getText().toString().trim(), 0);
 //            setdns1.cvh(getWindow().getDecorView(), handler);
 //            setdns1.execute();
             exec(set_dns2 + dns2.getText().toString().trim(), 0,null);
             //dns2
-//            exec_su setdns2 = new exec_su();
+//            EXEC setdns2 = new EXEC();
 //            setdns2.addc(set_dns2 + dns2.getText().toString().trim(), 0);
 //            setdns2.cvh(getWindow().getDecorView(), handler);
 //            setdns2.execute();
@@ -163,7 +163,7 @@ public class DNS_Changer extends AppCompatActivity {
         }
         exec(set_main_dns_remove, 0,null);
         exec(set_main_dns_remove, 0,null);
-//        exec_su rm_rules = new exec_su();
+//        EXEC rm_rules = new EXEC();
 //        rm_rules.addc(set_main_dns_remove, 0);
 //        rm_rules.cvh(getWindow().getDecorView(), handler);
 //        rm_rules.execute();

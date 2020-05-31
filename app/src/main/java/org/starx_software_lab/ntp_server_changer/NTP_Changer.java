@@ -41,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +60,8 @@ import java.util.Objects;
 
 public class NTP_Changer extends AppCompatActivity implements View.OnClickListener {
 
+    boolean online = false;
+    //
     final int MSG_FROM_EXECUTE = 1;
     final int MSG_FROM_LOCATION = 2;
     final int MSG_NEEDED_SHOW = 3;
@@ -72,7 +73,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     //固定字符串
     final String check_ntp = "settings get global ntp_server";
     final String set_ntp = "settings put global ntp_server ";
-    final String def1_a = "ntp1.aliyun.com";
+    final String def1_a = "time.apple.com";
     final String ping_c = "ping -c 4 ";
     public Long exmill = null;
     //
@@ -84,7 +85,21 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     Button test;
     Button ntp_sync;
     TextView date_t, date_ntp, location_ntp, date_diff;
-    Handler date_h;
+    //
+    Thread ntp_clock = null;
+    Thread sys_clock = new Thread(() -> {
+        while (online) {
+            runOnUiThread(() -> date_t.setText(SimpleDateFormat.getDateTimeInstance().format(System.currentTimeMillis())));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Thread.currentThread().interrupt();
+    });
+    //
+    LTEXEC ltexec = new LTEXEC();
     //
     int isdownloading = 1;
     boolean dialog_enable_status = true;
@@ -92,7 +107,6 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     boolean ping_enable_status = false;
     private Handler.Callback main_handler = new Handler.Callback() {
         public boolean handleMessage(@NotNull Message msg) {
-            String TAG = "Main_handler";
             String resultx = msg.obj.toString().trim();
             switch (msg.what) {
                 case MSG_FROM_EXECUTE:
@@ -110,7 +124,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                     if (dialog_enable_status)
                         sdialog(new String[]{"NTP地理位置", "获取到的NTP服务器位置:\n" + resultx});
                     if (ping_enable_status) {
-                        exec_su test = new exec_su();
+                        EXEC test = new EXEC();
                         test.cvh(getWindow().getDecorView(), main_handler);
                         test.addc(ping_c + result.getText().toString(), MSG_NEEDED_SHOW);
                         test.execute();
@@ -130,6 +144,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                     break;
                 case MSG_SET_TIME:
                     Log.d("SET_FALL_BACK", resultx);
+                    break;
                 default:
                     break;
             }
@@ -138,19 +153,11 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     };
     //初始化获取字符串
     private Long ntp_time = null;
-    final Runnable date_k = new Runnable() {
-        @Override
-        public void run() {
-            date_t.setText(SimpleDateFormat.getDateTimeInstance().format(System.currentTimeMillis()));
-            if (ntp_time != null) {
-                ntp_time += 100;
-                date_ntp.setText(SimpleDateFormat.getDateTimeInstance().format(ntp_time));
-            }
-            date_h.postDelayed(date_k, 100);
-        }
-    };
     private Long ntp_diff = null;
     private String ntp_location = null;
+
+    public NTP_Changer() throws IOException {
+    }
 
     //初始化NTP时间
     //New Thread lock
@@ -159,6 +166,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        online = true;
         start = findViewById(R.id.start);
         result = findViewById(R.id.Result_ntp);
         set = findViewById(R.id.Set_ntp);
@@ -182,14 +190,12 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
         dialog_enable_status = (getSharedPreferences("dialog_enable", MODE_PRIVATE).getBoolean("dialog_enable", false));
         ping_enable_status = (getSharedPreferences("ping_enable", MODE_PRIVATE).getBoolean("ping_enable", false));
         //
-        exec_su startup = new exec_su();
+        EXEC startup = new EXEC();
         startup.cvh(getWindow().getDecorView(), main_handler);
         startup.addc(check_ntp, MSG_STARTUP);
         startup.execute();
 
 
-        date_h = new Handler();
-        date_h.post(date_k);
         preferences = getSharedPreferences("count", MODE_PRIVATE);
         int count = preferences.getInt("count", MODE_PRIVATE);
         if (count == 0) {
@@ -204,6 +210,8 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
         } else {
             isdownloading = 0;
         }
+
+        sys_clock.start();
     }
 
     @Override
@@ -243,13 +251,13 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.nor_reboot:
                 sdialog(new String[] {"警告","即将执行正常重启，该操作无法取消，"});
-                exec_su nrb = new exec_su();
+                EXEC nrb = new EXEC();
                 nrb.addc("am start -a android.intent.action.REBOOT", 0);
                 nrb.execute();
                 break;
             case R.id.reboot:
                 sdialog(new String[] {"警告","即将执行硬重启，该操作无法取消，"});
-                exec_su rebootc = new exec_su();
+                EXEC rebootc = new EXEC();
                 rebootc.addc("reboot", 0);
                 rebootc.execute();
                 break;
@@ -277,25 +285,25 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.reboot_to_recovery:
                 sdialog(new String[] {"警告","即将硬重启至恢复模式，该操作无法取消，"});
-                exec_su commedx2 = new exec_su();
+                EXEC commedx2 = new EXEC();
                 commedx2.addc("reboot recovery", 0);
                 commedx2.execute();
                 break;
             case R.id.reboot_to_bootloader:
                 sdialog(new String[] {"警告","即将硬重启至线刷模式，该操作无法取消，"});
-                exec_su commedx3 = new exec_su();
+                EXEC commedx3 = new EXEC();
                 commedx3.addc("reboot bootloader", 0);
                 commedx3.execute();
                 break;
             case R.id.nor_poweroff:
                 sdialog(new String[] {"警告","即将执行正常关机，该操作无法取消，"});
-                exec_su npf = new exec_su();
+                EXEC npf = new EXEC();
                 npf.addc("am start -a com.android.internal.intent.action.REQUEST_SHUTDOWN", 0);
                 npf.execute();
                 break;
             case R.id.ha_poweroff:
                 sdialog(new String[] {"警告","即将执行硬关机，该操作无法取消，"});
-                exec_su hpf = new exec_su();
+                EXEC hpf = new EXEC();
                 hpf.addc("reboot -p", 0);
                 hpf.execute();
                 break;
@@ -374,6 +382,21 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                     final Long time_diff = nowlong - processing;
                     //实际NTP值
                     ntp_time = ntp_time + time_diff;
+                    //Thread
+                    kill_clock();
+                    ntp_clock = new Thread(() -> {
+                        while (!Thread.currentThread().isInterrupted()) {
+                            ntp_time += 500;
+                            runOnUiThread(() -> date_ntp.setText(SimpleDateFormat.getDateTimeInstance().format(ntp_time)));
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                    });
+                    ntp_clock.start();
                     if (!nowlong.equals(ntp_time)) {
                         long d = nowlong - ntp_time;
                         ntp_diff = d;
@@ -385,12 +408,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                             if (!SystemClock.setCurrentTimeMillis(ntp_time)) {
                                 //完善时间主动校准
                                 String termi_date = new SimpleDateFormat("MMddHHmmYYYY.ss", Locale.getDefault()).format(new Date(ntp_time));
-                                Process force_p = Runtime.getRuntime().exec("su");
-                                DataOutputStream dos = new DataOutputStream(force_p.getOutputStream());
-                                dos.writeBytes("date " + termi_date + "\n");
-                                dos.flush();
-                                dos.writeBytes("exit\n");
-                                dos.flush();
+                                ltexec.exec("date " + termi_date);
                                 Log.d("SET_DATE", termi_date);
                                 runOnUiThread(() -> Toast.makeText(getApplicationContext(), termi_date, Toast.LENGTH_SHORT).show());
                                 Looper.prepare();
@@ -445,7 +463,9 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        date_h.removeCallbacks(date_k);
+        online = false;
+        kill_clock();
+        ltexec.exit();
         super.onDestroy();
     }
 
@@ -477,11 +497,11 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                     if (set.getText().toString().length() == 0) {
                         Snackbar.make(getWindow().getDecorView(), "被修改的NTP服务器地址不能为空。", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        exec_su set_up = new exec_su();
+                        EXEC set_up = new EXEC();
                         //分两个异步线程读取
                         set_up.addc(set_ntp + set.getText().toString(), 0);
                         set_up.execute();
-                        exec_su checkon = new exec_su();
+                        EXEC checkon = new EXEC();
                         checkon.cvh(getWindow().getDecorView(), main_handler);
                         checkon.addc(check_ntp, MSG_FROM_EXECUTE);
                         checkon.execute();
@@ -531,7 +551,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
                 new Thread(() -> {
                     String image_add = "";
                     try {
-                        HttpURLConnection con = (HttpURLConnection) (new URL("https://pic.ioflow.xyz/?random").openConnection());
+                        HttpURLConnection con = (HttpURLConnection) (new URL("https://pic.ioflow.xyz:1443/?random").openConnection());
                         con.setConnectTimeout(5000);
                         con.setInstanceFollowRedirects(false);
                         con.connect();
@@ -664,6 +684,17 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     //Toast
     public void potato(String msg,int time) {
         runOnUiThread(() -> Toast.makeText(getApplicationContext(),msg,time).show());
+    }
+
+    public void kill_clock() {
+        if (ntp_clock!= null) {
+            if (ntp_clock.isAlive()){
+                ntp_clock.interrupt();
+            }
+        }
+        if (sys_clock.isAlive()){
+            sys_clock.interrupt();
+        }
     }
 
     //权限检查

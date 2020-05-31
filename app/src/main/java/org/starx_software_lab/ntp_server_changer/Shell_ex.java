@@ -47,7 +47,7 @@ public class Shell_ex extends AppCompatActivity {
 
     public void execute(View view) {
         String commands = commend.getText().toString();
-        exec_su process = new exec_su();
+        EXEC process = new EXEC();
         process.addc(commands, MSG_FROM_RETURN);
         process.cvh(getWindow().getDecorView(), handler);
         process.execute();

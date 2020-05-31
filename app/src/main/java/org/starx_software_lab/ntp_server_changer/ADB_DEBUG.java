@@ -55,7 +55,7 @@ public class ADB_DEBUG extends AppCompatActivity {
                         autosw = 0;
                     }
                 case MSG_FOR_CONFIRM:
-                    exec_su confirm = new exec_su();
+                    EXEC confirm = new EXEC();
                     confirm.cvh(getWindow().getDecorView(), callback);
                     confirm.addc(getprop, 0);
                     confirm.execute();
@@ -130,7 +130,7 @@ public class ADB_DEBUG extends AppCompatActivity {
                         port = "5555";
                     }
                     if (!port.equals("")) {
-                        exec_su set = new exec_su();
+                        EXEC set = new EXEC();
                         set.cvh(getWindow().getDecorView(), callback);
                         set.addc(setprop + port, MSG_FOR_CONFIRM);
                         set.execute();
@@ -140,7 +140,7 @@ public class ADB_DEBUG extends AppCompatActivity {
                         switch1.setChecked(false);
                     }
                 } else {
-                    exec_su unset = new exec_su();
+                    EXEC unset = new EXEC();
                     unset.cvh(getWindow().getDecorView(), callback);
                     unset.addc(setprop + "-1", MSG_FOR_CONFIRM);
                     unset.execute();
@@ -154,7 +154,7 @@ public class ADB_DEBUG extends AppCompatActivity {
     }
 
     private void checkself() {
-        exec_su process1 = new exec_su();
+        EXEC process1 = new EXEC();
         process1.cvh(getWindow().getDecorView(), callback);
         process1.addc(getprop, MSG_FOR_PORT);
         process1.execute();
