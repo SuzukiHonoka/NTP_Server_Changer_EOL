@@ -668,7 +668,7 @@ public class NTP_Changer extends AppCompatActivity implements View.OnClickListen
     }
 
     public void per_check() {
-        String[] per_inneed = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.WAKE_LOCK, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE};
+        String[] per_inneed = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE};
         for (int per_i = 0; per_inneed.length > per_i; per_i++) {
             //hinting("Process","必要权限状态正在开始被检查，共:"+per_inneed.length+"项，还剩:"+per_i+"项\nPermission:"+per_inneed[per_i]);
             //Toast.makeText(this,,Toast.LENGTH_SHORT).show();

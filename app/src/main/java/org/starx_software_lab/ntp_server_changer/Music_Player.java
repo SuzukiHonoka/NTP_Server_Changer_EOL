@@ -29,13 +29,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 public class Music_Player extends AppCompatActivity {
@@ -88,9 +87,15 @@ public class Music_Player extends AppCompatActivity {
         music_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //TO-DO
+                if (progress == seekBar.getMax()) {
+                    music_play.setText("播放");
+                    kill_timer();
+                    if (play_mode == 1) {
+                        Log.d("Next_song", "Index OF: " + current_list.indexOf(current_music_name) + "\nNext_name: " + current_list.get(current_list.indexOf(current_music_name) + 1));
+                        music_player(current_list.get(current_list.indexOf(current_music_name) + 1), 0);
+                    }
+                }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 kill_timer();
@@ -107,7 +112,7 @@ public class Music_Player extends AppCompatActivity {
                     mediaPlayer.seekTo(seekBar.getProgress());
                     getProgress();
                 } catch (Exception e) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show());
+                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -267,13 +272,14 @@ public class Music_Player extends AppCompatActivity {
             return;
         }
         //如果与上一首歌曲不一致且还在播放则强制释放
-        if (isplaying) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            isplaying = false;
-            mediaPlayer = null;
-            Log.d("Player", "已释放资源。");
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                Log.d("Player", "已释放资源。");
+            }
         }
 
         try {
@@ -296,8 +302,6 @@ public class Music_Player extends AppCompatActivity {
                 //开始播放媒体音乐
                 mediaPlayer.start();
                 music_play.setText("暂停");
-                //开始播放变量设为真
-                isplaying = true;
                 //持续更新进度条
                 getProgress();
                 get_current_music_info(path);
@@ -324,23 +328,12 @@ public class Music_Player extends AppCompatActivity {
                 Log.d(TAG, String.valueOf(p));
                 Log.i(TAG, "CurrentThread ID:" + Thread.currentThread().getId());
                 //将获取歌曲的进度赋值给seekbar
-                //music_op.setText(TimerFormatter);
                 music_bar.setProgress(p);
                 //正在播放的标签
                 runOnUiThread(() -> music_op.setText(formatTime(p)));
                 //如果达到歌曲最大值，则开始休眠
-                if (mediaPlayer.getDuration() == p) {
-                    runOnUiThread(() -> music_play.setText("播放"));
-                    kill_timer();
-                    if (play_mode == 1) {
-                        runOnUiThread(() -> {
-                            Log.d("Next_song", "Index OF: " + current_list.indexOf(current_music_name) + "\nNext_name: " + current_list.get(current_list.indexOf(current_music_name) + 1));
-                            music_player(current_list.get(current_list.indexOf(current_music_name) + 1), 0);
-                        });
-                    }
-                }
             }
-        }, 0, 300);
+        }, 0, 1000);
     }
 
     private void kill_timer() {
@@ -392,21 +385,26 @@ public class Music_Player extends AppCompatActivity {
     }
 
     private String formatTime(int length) {
-        Date date = new Date(length);
-        int ss = length / 1000;
-        String min = String.valueOf(ss / 60);
-        String sec = String.valueOf(ss % 60);
-        if (Integer.parseInt(min) / 10 <= 0) {
-            min = "0" + min;
-        }
-        if (Integer.parseInt(sec) / 10 <= 0) {
-            sec = "0" + sec;
-        }
+
+//        int ss = length / 1000;
+//        String min = String.valueOf(ss / 60);
+//        String sec = String.valueOf(ss % 60);
+//        if (Integer.parseInt(min) / 10 <= 0) {
+//            min = "0" + min;
+//        }
+//        if (Integer.parseInt(sec) / 10 <= 0) {
+//            sec = "0" + sec;
+//        }
 
 //时间格式化工具
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SSSSS", Locale.getDefault());
-        //return sdf.format(date);
-        return min + ":" + sec;
+//        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
+//        return sdf.format(new Date(length));
+        //return min + ":" + sec;
+        return String.format(Locale.getDefault(), "%d hour, %d min, %d sec",
+                TimeUnit.MILLISECONDS.toHours(length),
+                TimeUnit.MILLISECONDS.toMinutes(length),
+                TimeUnit.MILLISECONDS.toSeconds(length) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(length)));
     }
 
 

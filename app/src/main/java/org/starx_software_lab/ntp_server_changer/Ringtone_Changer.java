@@ -33,9 +33,9 @@ public class Ringtone_Changer extends AppCompatActivity {
             if (!ab_music_path.isEmpty()) {
                 Uri uri = MediaStore.Audio.Media.getContentUriForPath(ab_music_path);
                 assert uri != null;
-                getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + "=\"" + ab_music_path + "\"", null);
+                //getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + "=\"" + ab_music_path + "\"", null);
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(ab_music_path);
+                mmr.setDataSource(getApplicationContext(), uri);
                 //标题
                 String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
                 //歌手
@@ -50,7 +50,6 @@ public class Ringtone_Changer extends AppCompatActivity {
                 values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
                 values.put(MediaStore.Audio.Media.IS_ALARM, false);
                 values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-
                 Uri newUri = getContentResolver().insert(uri, values);
                 Log.d(TAG, "ab:" + ab_music_path + "\nURI:" + uri.toString() + "\nvalues:" + values.toString() + "\nNEWURI:" + newUri);
                 RingtoneManager.setActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_RINGTONE, newUri);
