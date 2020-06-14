@@ -6,7 +6,7 @@ android {
         applicationId "org.starx_software_lab.ntp_server_changer"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode 20003
+        versionCode 20004
         versionName "2.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
